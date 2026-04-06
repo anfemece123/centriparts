@@ -65,7 +65,7 @@ export default function PublicProductPage() {
   const name     = product.display_name ?? product.base_name
   const imageUrl = activeImage ? getPublicImageUrl(activeImage.storage_path) : null
 
-  function handleAddToCart() {
+  const handleAddToCart = () => {
     dispatch(addItem({
       productId: product.id,
       name,

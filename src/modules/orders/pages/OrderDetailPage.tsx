@@ -6,7 +6,6 @@ import {
   updateOrderStatus,
   updatePaymentStatus,
   addAdminNote,
-  type CustomerInfo,
 } from '@/modules/orders/services/orders.service'
 import { ROUTES } from '@/shared/constants'
 import type {

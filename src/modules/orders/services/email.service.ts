@@ -113,10 +113,6 @@ function waButton(orderNumber: string) {
     </table>`
 }
 
-function divider() {
-  return `<tr><td style="padding:8px 0;"><hr style="border:none;border-top:1px solid #e4e4e7;margin:0;"></td></tr>`
-}
-
 function sectionLabel(text: string) {
   return `<p style="margin:0 0 12px 0;font-family:${FONT};font-size:11px;font-weight:700;
                     letter-spacing:1.5px;text-transform:uppercase;color:#a1a1aa;">${esc(text)}</p>`
