@@ -7,6 +7,7 @@ const navItems = [
   { label: t.nav.dashboard,  path: ROUTES.ADMIN_HOME        },
   { label: t.nav.products,   path: ROUTES.ADMIN_PRODUCTS    },
   { label: t.nav.categories, path: ROUTES.ADMIN_CATEGORIES  },
+  { label: t.nav.orders,     path: ROUTES.ADMIN_ORDERS      },
 ]
 
 export default function Sidebar() {

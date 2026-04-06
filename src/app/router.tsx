@@ -13,8 +13,11 @@ import LoginPage      from '@/modules/auth/pages/LoginPage'
 import PublicHomePage    from '@/modules/public/pages/PublicHomePage'
 import NosotrosPage      from '@/modules/public/pages/NosotrosPage'
 import ContactoPage      from '@/modules/public/pages/ContactoPage'
-import PublicCatalogPage from '@/modules/catalog/pages/PublicCatalogPage'
-import PublicProductPage from '@/modules/catalog/pages/PublicProductPage'
+import PublicCatalogPage      from '@/modules/catalog/pages/PublicCatalogPage'
+import PublicProductPage      from '@/modules/catalog/pages/PublicProductPage'
+import CheckoutPage           from '@/modules/checkout/pages/CheckoutPage'
+import OrderConfirmationPage  from '@/modules/checkout/pages/OrderConfirmationPage'
+import TrackingPage           from '@/modules/orders/pages/TrackingPage'
 
 // Admin pages
 import AdminHomePage     from '@/modules/home/pages/HomePage'
@@ -22,6 +25,8 @@ import ProductsPage      from '@/modules/catalog/pages/ProductsPage'
 import ProductDetailPage from '@/modules/catalog/pages/ProductDetailPage'
 import CategoriesPage    from '@/modules/catalog/pages/CategoriesPage'
 import NameAnalysisPage  from '@/modules/catalog/pages/NameAnalysisPage'
+import OrdersPage        from '@/modules/orders/pages/OrdersPage'
+import OrderDetailPage   from '@/modules/orders/pages/OrderDetailPage'
 
 export const router = createBrowserRouter([
 
@@ -32,8 +37,11 @@ export const router = createBrowserRouter([
       { path: ROUTES.PUBLIC_HOME,    element: <PublicHomePage />    },
       { path: ROUTES.PUBLIC_ABOUT,   element: <NosotrosPage />      },
       { path: ROUTES.PUBLIC_CONTACT, element: <ContactoPage />      },
-      { path: ROUTES.PUBLIC_CATALOG, element: <PublicCatalogPage /> },
-      { path: ROUTES.PUBLIC_PRODUCT, element: <PublicProductPage /> },
+      { path: ROUTES.PUBLIC_CATALOG,      element: <PublicCatalogPage />     },
+      { path: ROUTES.PUBLIC_PRODUCT,      element: <PublicProductPage />     },
+      { path: ROUTES.PUBLIC_CHECKOUT,     element: <CheckoutPage />          },
+      { path: ROUTES.PUBLIC_CONFIRMATION, element: <OrderConfirmationPage /> },
+      { path: ROUTES.PUBLIC_TRACKING,     element: <TrackingPage />          },
     ],
   },
 
@@ -55,6 +63,8 @@ export const router = createBrowserRouter([
           { path: ROUTES.ADMIN_PRODUCT_DETAIL, element: <ProductDetailPage /> },
           { path: ROUTES.ADMIN_CATEGORIES,     element: <CategoriesPage />    },
           { path: ROUTES.ADMIN_NAME_ANALYSIS,  element: <NameAnalysisPage />  },
+          { path: ROUTES.ADMIN_ORDERS,         element: <OrdersPage />        },
+          { path: ROUTES.ADMIN_ORDER_DETAIL,   element: <OrderDetailPage />   },
         ],
       },
     ],

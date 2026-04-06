@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductById } from '@/modules/catalog/services/products.service'
 import { getPublicImageUrl } from '@/modules/catalog/services/product-images.service'
+import { useAppDispatch } from '@/store'
+import { addItem, openCart } from '@/modules/cart/store/cartSlice'
 import type { ProductWithRelations, ProductImage } from '@/types'
 
 const priceFormatter = new Intl.NumberFormat('es-CO', {
@@ -16,13 +18,15 @@ function resolveInitialImage(images: ProductImage[]): ProductImage | null {
 }
 
 export default function PublicProductPage() {
-  const { id } = useParams<{ id: string }>()
+  const { id }   = useParams<{ id: string }>()
+  const dispatch = useAppDispatch()
 
   const [product, setProduct] = useState<ProductWithRelations | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]     = useState<string | null>(null)
 
   const [activeImage, setActiveImage] = useState<ProductImage | null>(null)
+  const [addedFeedback, setAddedFeedback] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -58,7 +62,21 @@ export default function PublicProductPage() {
     )
   }
 
-  const name = product.display_name ?? product.base_name
+  const name     = product.display_name ?? product.base_name
+  const imageUrl = activeImage ? getPublicImageUrl(activeImage.storage_path) : null
+
+  function handleAddToCart() {
+    dispatch(addItem({
+      productId: product.id,
+      name,
+      reference: product.reference,
+      price:     product.sale_price,
+      imageUrl,
+    }))
+    dispatch(openCart())
+    setAddedFeedback(true)
+    setTimeout(() => setAddedFeedback(false), 2000)
+  }
   const sorted = [...product.images].sort((a, b) => {
     if (a.is_primary !== b.is_primary) return a.is_primary ? -1 : 1
     return a.display_order - b.display_order
@@ -131,6 +149,13 @@ export default function PublicProductPage() {
             <p className="text-3xl font-bold text-zinc-900">
               {priceFormatter.format(product.sale_price)}
             </p>
+
+            <button
+              onClick={handleAddToCart}
+              className="mt-2 w-full rounded-xl bg-yellow-400 py-3.5 text-sm font-bold text-black transition-colors hover:bg-yellow-500 sm:w-auto sm:px-8"
+            >
+              {addedFeedback ? '¡Agregado al carrito!' : 'Agregar al carrito'}
+            </button>
 
             {product.description && (
               <div className="border-t border-zinc-100 pt-5">

@@ -51,16 +51,16 @@ export default function PublicFooter() {
             </p>
             <div className="flex flex-col gap-1 text-sm">
               <a
-                href="mailto:info@centriparts.com"
+                href="mailto:centripartsjed@outlook.es"
                 className="transition-colors hover:text-white"
               >
-                info@centriparts.com
+                centripartsjed@outlook.es
               </a>
               <a
-                href="tel:+573001234567"
+                href="tel:+573503160713"
                 className="transition-colors hover:text-white"
               >
-                +57 300 123 4567
+                +57 350 316 0713
               </a>
             </div>
           </div>

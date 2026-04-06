@@ -3,8 +3,11 @@ export const ROUTES = {
   PUBLIC_HOME:    '/',
   PUBLIC_CATALOG: '/catalog',
   PUBLIC_PRODUCT: '/p/:id',
-  PUBLIC_ABOUT:   '/nosotros',
-  PUBLIC_CONTACT: '/contacto',
+  PUBLIC_ABOUT:         '/nosotros',
+  PUBLIC_CONTACT:       '/contacto',
+  PUBLIC_CHECKOUT:      '/checkout',
+  PUBLIC_CONFIRMATION:  '/checkout/confirmacion',
+  PUBLIC_TRACKING:      '/seguimiento',
 
   // ── Auth ────────────────────────────────────────────────────────────
   ADMIN_LOGIN: '/admin/login',
@@ -15,4 +18,6 @@ export const ROUTES = {
   ADMIN_PRODUCT_DETAIL: '/admin/products/:id',
   ADMIN_CATEGORIES:     '/admin/categories',
   ADMIN_NAME_ANALYSIS:  '/admin/tools/name-analysis',
+  ADMIN_ORDERS:         '/admin/orders',
+  ADMIN_ORDER_DETAIL:   '/admin/orders/:id',
 } as const

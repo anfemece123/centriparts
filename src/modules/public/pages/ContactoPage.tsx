@@ -16,9 +16,9 @@ const CONTACT_CARDS = [
   },
   {
     label: 'Correo electrónico',
-    value: 'info@centriparts.com',
+    value: 'centripartsjed@outlook.es',
     detail: 'Respuesta en menos de 24 horas',
-    href: 'mailto:info@centriparts.com',
+    href: 'mailto:centripartsjed@outlook.es',
     icon: '✉',
   },
   {

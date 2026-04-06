@@ -4,6 +4,8 @@ import { listPublicProducts } from '@/modules/catalog/services/products.service'
 import { listProductBrands } from '@/modules/catalog/services/brands.service'
 import { listCategories } from '@/modules/catalog/services/categories.service'
 import { getPublicImageUrl } from '@/modules/catalog/services/product-images.service'
+import { useAppDispatch } from '@/store'
+import { addItem, openCart } from '@/modules/cart/store/cartSlice'
 import type { PublicProductListItem, ProductBrand, Category } from '@/types'
 
 const PAGE_SIZE = 24
@@ -26,48 +28,69 @@ function resolveCardImage(
 }
 
 function ProductCard({ product }: { product: PublicProductListItem }) {
-  const image = resolveCardImage(product.images)
-  const name = product.display_name ?? product.base_name
+  const dispatch = useAppDispatch()
+  const image    = resolveCardImage(product.images)
+  const name     = product.display_name ?? product.base_name
+  const imageUrl = image ? getPublicImageUrl(image.storage_path) : null
+
+  function handleAddToCart() {
+    dispatch(addItem({
+      productId: product.id,
+      name,
+      reference: null,
+      price:     product.sale_price,
+      imageUrl,
+    }))
+    dispatch(openCart())
+  }
 
   return (
-    <Link
-      to={`/p/${product.id}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white transition-shadow hover:shadow-md"
-    >
-      <div className="aspect-square w-full overflow-hidden bg-zinc-100">
-        {image ? (
-          <img
-            src={getPublicImageUrl(image.storage_path)}
-            alt={image.alt_text ?? name}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="text-xs text-zinc-300">Sin imagen</span>
-          </div>
-        )}
-      </div>
+    <div className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white transition-shadow hover:shadow-md">
+      <Link to={`/p/${product.id}`} className="flex flex-col">
+        <div className="aspect-square w-full overflow-hidden bg-zinc-100">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={image?.alt_text ?? name}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="text-xs text-zinc-300">Sin imagen</span>
+            </div>
+          )}
+        </div>
 
-      <div className="flex flex-col gap-1 p-4">
-        {product.brand && (
-          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
-            {product.brand.name}
-          </span>
-        )}
-        <h2 className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
-          {name}
-        </h2>
-        {product.description && (
-          <p className="line-clamp-2 text-xs leading-relaxed text-zinc-400">
-            {product.description}
+        <div className="flex flex-col gap-1 p-4">
+          {product.brand && (
+            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
+              {product.brand.name}
+            </span>
+          )}
+          <h2 className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+            {name}
+          </h2>
+          {product.description && (
+            <p className="line-clamp-2 text-xs leading-relaxed text-zinc-400">
+              {product.description}
+            </p>
+          )}
+          <p className="mt-2 text-base font-bold text-zinc-900">
+            {priceFormatter.format(product.sale_price)}
           </p>
-        )}
-        <p className="mt-2 text-base font-bold text-zinc-900">
-          {priceFormatter.format(product.sale_price)}
-        </p>
+        </div>
+      </Link>
+
+      <div className="px-4 pb-4">
+        <button
+          onClick={handleAddToCart}
+          className="w-full rounded-lg bg-yellow-400 py-2 text-sm font-semibold text-black transition-colors hover:bg-yellow-500"
+        >
+          Agregar al carrito
+        </button>
       </div>
-    </Link>
+    </div>
   )
 }
 

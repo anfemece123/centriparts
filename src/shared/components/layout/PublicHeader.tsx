@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants'
 import logo from '@/assets/logo-centriparts.png'
+import CartIconButton from '@/modules/cart/components/CartIconButton'
 
 const NAV_LINKS = [
-  { label: 'Inicio',   to: ROUTES.PUBLIC_HOME    },
-  { label: 'Catálogo', to: ROUTES.PUBLIC_CATALOG  },
-  { label: 'Nosotros', to: ROUTES.PUBLIC_ABOUT    },
-  { label: 'Contacto', to: ROUTES.PUBLIC_CONTACT  },
+  { label: 'Inicio',     to: ROUTES.PUBLIC_HOME     },
+  { label: 'Catálogo',   to: ROUTES.PUBLIC_CATALOG  },
+  { label: 'Nosotros',   to: ROUTES.PUBLIC_ABOUT    },
+  { label: 'Contacto',   to: ROUTES.PUBLIC_CONTACT  },
+  { label: 'Mi pedido',  to: ROUTES.PUBLIC_TRACKING },
 ]
 
 function HamburgerIcon() {
@@ -86,6 +88,8 @@ export default function PublicHeader() {
             <span className="hidden sm:inline">Ver catálogo</span>
             <span className="sm:hidden">Catálogo</span>
           </Link>
+
+          <CartIconButton />
 
           {/* Hamburger — mobile only */}
           <button
