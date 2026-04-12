@@ -2,19 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PageHeader, Card, Badge, Button, Input } from '@/shared/components/ui'
 import { getProductById, updateProductDetails, updateProductStatus } from '@/modules/catalog/services/products.service'
-import {
-  listCategories,
-  assignProductToCategory,
-  removeProductFromCategory,
-} from '@/modules/catalog/services/categories.service'
 import ProductImagesSection from '@/modules/catalog/components/ProductImagesSection'
-import type { ProductWithRelations, ProductStatus, Category } from '@/types'
-
-// Actual Supabase join shape for product_categories
-interface ProductCategoryRow {
-  is_primary: boolean
-  category:   Category
-}
+import ProductCategorySection from '@/modules/catalog/components/ProductCategorySection'
+import ProductCompatibilitySection from '@/modules/catalog/components/ProductCompatibilitySection'
+import type { ProductCategoryRow } from '@/modules/catalog/components/ProductCategorySection'
+import type { CompatibilityRow } from '@/modules/catalog/components/ProductCompatibilitySection'
+import type { ProductWithRelations, ProductStatus } from '@/types'
 
 const STATUS_OPTIONS: { value: ProductStatus; label: string }[] = [
   { value: 'draft',     label: 'Borrador' },
@@ -37,11 +30,6 @@ const STATUS_LABELS: Record<ProductStatus, string> = {
   archived:  'Archivado',
 }
 
-const PARSE_STATUS_LABELS: Record<string, string> = {
-  auto:    'Automático',
-  partial: 'Parcial',
-  manual:  'Manual',
-}
 
 const priceFormatter = new Intl.NumberFormat('es-CO', {
   style:    'currency',
@@ -91,16 +79,6 @@ export default function ProductDetailPage() {
   const [saveError, setSaveError]   = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
-  const [allCategories, setAllCategories]         = useState<Category[]>([])
-  const [selectedCategoryId, setSelectedCategoryId] = useState('')
-  const [assignAsPrimary, setAssignAsPrimary]       = useState(false)
-  const [categoryBusy, setCategoryBusy]             = useState(false)
-  const [categoryError, setCategoryError]           = useState<string | null>(null)
-
-  useEffect(() => {
-    listCategories().then(setAllCategories).catch(() => {/* non-critical */})
-  }, [])
-
   useEffect(() => {
     if (!id) return
     setLoading(true)
@@ -127,36 +105,6 @@ export default function ProductDetailPage() {
     if (refreshed) {
       setProduct(refreshed)
       setForm(formFromProduct(refreshed))
-    }
-  }
-
-  async function handleAssignCategory() {
-    if (!id || !selectedCategoryId) return
-    setCategoryBusy(true)
-    setCategoryError(null)
-    try {
-      await assignProductToCategory(id, selectedCategoryId, assignAsPrimary)
-      setSelectedCategoryId('')
-      setAssignAsPrimary(false)
-      await refreshProduct()
-    } catch {
-      setCategoryError('No se pudo asignar la categoría.')
-    } finally {
-      setCategoryBusy(false)
-    }
-  }
-
-  async function handleRemoveCategory(categoryId: string) {
-    if (!id) return
-    setCategoryBusy(true)
-    setCategoryError(null)
-    try {
-      await removeProductFromCategory(id, categoryId)
-      await refreshProduct()
-    } catch {
-      setCategoryError('No se pudo quitar la categoría.')
-    } finally {
-      setCategoryBusy(false)
     }
   }
 
@@ -298,208 +246,20 @@ export default function ProductDetailPage() {
             <div className="px-5 py-4 border-b border-zinc-100">
               <h2 className="text-sm font-semibold text-zinc-700">Categorías</h2>
             </div>
-
-            {(() => {
-              const assigned     = (product.categories as unknown as ProductCategoryRow[])
-              const primaryRow   = assigned.find((r) => r.is_primary) ?? null
-              const nonPrimary   = assigned.filter((r) => !r.is_primary)
-
-              // Derived subcategory: non-primary whose parent_id matches the main category
-              const subcategoryRow = primaryRow
-                ? nonPrimary.find((r) => r.category.parent_id === primaryRow.category.id) ?? null
-                : null
-
-              // Everything else non-primary (manually added, unrelated categories)
-              const additionalRows = nonPrimary.filter((r) => r !== subcategoryRow)
-
-              const assignedIds = new Set(assigned.map((r) => r.category.id))
-              const available   = allCategories.filter((c) => !assignedIds.has(c.id))
-
-              return (
-                <div className="px-5 py-4 flex flex-col gap-6">
-
-                  {/* ── Clasificación actual ───────────────────────────── */}
-                  <div className="flex flex-col gap-1">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">
-                      Clasificación actual
-                    </p>
-
-                    {/* Primary category */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-zinc-400">Categoría principal</span>
-                      {primaryRow ? (
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="text-sm font-semibold text-zinc-800">
-                            {primaryRow.category.name}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            disabled={categoryBusy}
-                            onClick={() => handleRemoveCategory(primaryRow.category.id)}
-                          >
-                            Quitar
-                          </Button>
-                        </div>
-                      ) : (
-                        <span className="text-sm italic text-zinc-400">Sin asignar</span>
-                      )}
-                    </div>
-
-                    {/* Derived subcategory — indented under primary */}
-                    <div className="ml-4 mt-2 border-l-2 border-zinc-100 pl-4 flex flex-col gap-1">
-                      <span className="text-xs text-zinc-400">Subcategoría principal</span>
-                      {subcategoryRow ? (
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="text-sm text-zinc-700">
-                            {subcategoryRow.category.name}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            disabled={categoryBusy}
-                            onClick={() => handleRemoveCategory(subcategoryRow.category.id)}
-                          >
-                            Quitar
-                          </Button>
-                        </div>
-                      ) : (
-                        <span className="text-sm italic text-zinc-400">Sin asignar</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── Categorías adicionales ─────────────────────────── */}
-                  <div className="border-t border-zinc-100 pt-4 flex flex-col gap-2">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
-                      Categorías adicionales
-                    </p>
-                    {additionalRows.length === 0 ? (
-                      <span className="text-sm italic text-zinc-400">Sin asignar</span>
-                    ) : (
-                      <ul className="flex flex-col gap-2">
-                        {additionalRows.map((row) => (
-                          <li key={row.category.id} className="flex items-center justify-between gap-3">
-                            <span className="text-sm text-zinc-700">{row.category.name}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              disabled={categoryBusy}
-                              onClick={() => handleRemoveCategory(row.category.id)}
-                            >
-                              Quitar
-                            </Button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-
-                  {/* ── Asignar categoría ──────────────────────────────── */}
-                  {available.length > 0 && (
-                    <div className="border-t border-zinc-100 pt-4 flex flex-col gap-3">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                        Asignar categoría
-                      </p>
-                      <select
-                        value={selectedCategoryId}
-                        onChange={(e) => setSelectedCategoryId(e.target.value)}
-                        className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
-                      >
-                        <option value="">Seleccionar categoría…</option>
-                        {available.map((c) => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                      </select>
-                      <label className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700">
-                        <input
-                          type="checkbox"
-                          checked={assignAsPrimary}
-                          onChange={(e) => setAssignAsPrimary(e.target.checked)}
-                          className="h-4 w-4 rounded border-zinc-300 accent-yellow-400"
-                        />
-                        Categoría principal
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <Button
-                          size="sm"
-                          disabled={!selectedCategoryId || categoryBusy}
-                          onClick={handleAssignCategory}
-                        >
-                          Asignar
-                        </Button>
-                        {categoryError && (
-                          <span className="text-sm text-red-500">{categoryError}</span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-              )
-            })()}
+            <ProductCategorySection
+              productId={product.id}
+              assignedCategories={product.categories as unknown as ProductCategoryRow[]}
+              onRefresh={refreshProduct}
+            />
           </Card>
 
           {/* Compatibility */}
           <Card padding={false}>
-            <div className="px-5 py-4 border-b border-zinc-100">
-              <h2 className="text-sm font-semibold text-zinc-700">Compatibilidad</h2>
-              <p className="mt-0.5 text-xs text-zinc-400">
-                {product.compatibility.length} registro{product.compatibility.length !== 1 ? 's' : ''}
-              </p>
-            </div>
-
-            {product.compatibility.length === 0 ? (
-              <p className="px-5 py-8 text-center text-sm text-zinc-400">
-                Sin registros de compatibilidad.
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-zinc-100 bg-zinc-50 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      <th className="px-4 py-3">Marca</th>
-                      <th className="px-4 py-3">Modelo</th>
-                      <th className="px-4 py-3">Desde</th>
-                      <th className="px-4 py-3">Hasta</th>
-                      <th className="px-4 py-3">Parseo</th>
-                      <th className="px-4 py-3">Verificado</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {product.compatibility.map((c) => (
-                      <tr key={c.id} className="hover:bg-zinc-50">
-                        <td className="px-4 py-2.5 text-zinc-700">
-                          {c.vehicle_brand?.name ?? '—'}
-                        </td>
-                        <td className="px-4 py-2.5 text-zinc-700">
-                          {c.vehicle_model?.name ?? '—'}
-                        </td>
-                        <td className="px-4 py-2.5 tabular-nums text-zinc-500">
-                          {c.year_from ?? '—'}
-                        </td>
-                        <td className="px-4 py-2.5 tabular-nums text-zinc-500">
-                          {c.year_to ?? '—'}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <Badge
-                            label={PARSE_STATUS_LABELS[c.parse_status] ?? c.parse_status}
-                            variant={c.parse_status === 'auto' ? 'success' : c.parse_status === 'partial' ? 'warning' : 'info'}
-                          />
-                        </td>
-                        <td className="px-4 py-2.5">
-                          {c.is_verified ? (
-                            <Badge label="Sí" variant="success" />
-                          ) : (
-                            <Badge label="No" variant="default" />
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <ProductCompatibilitySection
+              productId={product.id}
+              compatibility={product.compatibility as unknown as CompatibilityRow[]}
+              onRefresh={refreshProduct}
+            />
           </Card>
         </div>
 
