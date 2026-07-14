@@ -64,7 +64,7 @@ export default function CategoryCreateModal({
           <h3 className="text-sm font-semibold text-zinc-800">{title}</h3>
           <button
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-600 transition-colors text-lg leading-none"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
             aria-label="Cerrar"
           >
             ×

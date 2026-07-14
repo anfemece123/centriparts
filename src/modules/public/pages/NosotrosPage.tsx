@@ -1,51 +1,52 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants'
+import { getButtonClassName } from '@/shared/components/ui'
 
 const VALUES = [
   {
-    title: 'Calidad garantizada',
-    description:
-      'Trabajamos únicamente con proveedores verificados y productos que cumplen estándares técnicos exigentes.',
-  },
-  {
-    title: 'Amplio inventario',
-    description:
-      'Miles de referencias disponibles para las principales marcas del mercado automotriz colombiano.',
-  },
-  {
     title: 'Compatibilidad verificada',
     description:
-      'Cada repuesto incluye información de compatibilidad por marca, modelo y año de fabricación.',
+      'Le ayudamos a identificar el componente adecuado según la marca, línea, modelo y referencia de su vehículo.',
+  },
+  {
+    title: 'Asesoría especializada',
+    description:
+      'Reciba orientación para encontrar componentes eléctricos y electrónicos de forma más segura.',
+  },
+  {
+    title: 'Referencias confiables',
+    description:
+      'Encuentre alternativas para el mantenimiento y la reparación de los sistemas eléctricos de su vehículo.',
   },
   {
     title: 'Atención personalizada',
     description:
-      'Asesoría técnica directa para encontrar el repuesto exacto que su vehículo necesita.',
+      'Consulte sus dudas y reciba acompañamiento durante la búsqueda de la referencia que necesita.',
   },
   {
-    title: 'Entrega oportuna',
+    title: 'Respuesta oportuna',
     description:
-      'Comprometidos con los tiempos de respuesta para que su taller no se detenga.',
+      'Atendemos sus consultas de disponibilidad y compatibilidad con información clara y directa.',
   },
   {
-    title: 'Respaldo comercial',
+    title: 'Orientación comercial',
     description:
-      'Años de experiencia en el sector nos respaldan como un aliado confiable para talleres y distribuidores.',
+      'Acompañamos a propietarios, técnicos, talleres y electricistas automotrices en su búsqueda.',
   },
 ]
 
 const OFFERINGS = [
   {
-    title: 'Repuestos eléctricos',
-    description: 'Sensores, actuadores, módulos de control y componentes del sistema eléctrico automotriz.',
+    title: 'Sistemas eléctricos',
+    description: 'Componentes para sistemas de encendido, carga, iluminación y protección eléctrica automotriz.',
   },
   {
-    title: 'Componentes mecánicos',
-    description: 'Bombas de agua, filtros, correas, rodamientos y partes de motor para múltiples marcas.',
+    title: 'Sensores y electrónica',
+    description: 'Sensores, actuadores, módulos y componentes electrónicos para diagnóstico, mantenimiento y reparación.',
   },
   {
-    title: 'Distribución mayorista',
-    description: 'Atendemos talleres, concesionarios y distribuidores con precios y condiciones comerciales especiales.',
+    title: 'Conexión y control',
+    description: 'Fusibles, relés, interruptores, conectores y soluciones para circuitos eléctricos del vehículo.',
   },
 ]
 
@@ -63,7 +64,7 @@ export default function NosotrosPage() {
             Nosotros
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-zinc-400">
-            Distribuidores de repuestos automotrices con experiencia, calidad y compromiso al servicio del sector.
+            Especialistas en componentes eléctricos y electrónicos para vehículos, con atención clara y personalizada.
           </p>
         </div>
       </section>
@@ -78,27 +79,26 @@ export default function NosotrosPage() {
                 Nuestra empresa
               </p>
               <h2 className="mb-5 text-3xl font-bold leading-snug text-zinc-900">
-                Experiencia y confianza al servicio del sector automotriz
+                Experiencia en electricidad automotriz
               </h2>
               <p className="mb-4 text-sm leading-relaxed text-zinc-500">
-                Centriparts es una empresa distribuidora de repuestos automotrices con trayectoria
-                en el mercado colombiano. Nacimos con el propósito de conectar a talleres mecánicos,
-                concesionarios y distribuidores con los repuestos que necesitan, en el tiempo que
-                los necesitan.
+                Centriparts está orientado a la comercialización de componentes eléctricos y
+                electrónicos para vehículos. Nuestro objetivo es facilitar la búsqueda de referencias
+                y brindar una atención clara y personalizada a clientes, técnicos y talleres.
               </p>
               <p className="text-sm leading-relaxed text-zinc-500">
-                Ofrecemos un catálogo amplio y actualizado de referencias eléctricas y mecánicas
-                para las principales marcas del mercado, con un enfoque claro en calidad,
-                disponibilidad y asesoría técnica especializada.
+                Trabajamos para que cada cliente pueda encontrar soluciones para sistemas de
+                encendido, carga, iluminación, sensores, conexiones y otros componentes eléctricos
+                del vehículo.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: '+5.000', label: 'Referencias disponibles' },
-                { value: '+50',   label: 'Marcas cubiertas'        },
-                { value: '+10',   label: 'Años de experiencia'     },
-                { value: '+200',  label: 'Clientes activos'        },
+                { value: 'Energía',    label: 'Sistemas eléctricos' },
+                { value: 'Control',    label: 'Componentes electrónicos' },
+                { value: 'Multimarca', label: 'Aplicaciones' },
+                { value: 'Asesoría',   label: 'Atención personalizada' },
               ].map((stat) => (
                 <div key={stat.label} className="rounded-xl border border-zinc-100 p-6">
                   <p className="text-3xl font-bold text-zinc-900">{stat.value}</p>
@@ -120,11 +120,11 @@ export default function NosotrosPage() {
               Qué ofrecemos
             </p>
             <h2 className="text-2xl font-bold text-zinc-900">
-              Soluciones para el sector automotriz
+              Soluciones para sistemas eléctricos y electrónicos
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-zinc-500">
-              Cubrimos las principales categorías de repuestos para que su negocio tenga
-              todo en un mismo proveedor confiable.
+              Orientación y componentes para sistemas de encendido, carga, iluminación,
+              sensores, conexiones y control automotriz.
             </p>
           </div>
 
@@ -179,8 +179,8 @@ export default function NosotrosPage() {
             Nuestra misión
           </p>
           <p className="text-xl font-semibold leading-relaxed text-zinc-800 sm:text-2xl">
-            "Ser el aliado estratégico del sector automotriz colombiano, ofreciendo repuestos
-            de calidad con información técnica verificada y atención que genera confianza."
+            "Facilitar la búsqueda de componentes eléctricos y electrónicos para vehículos,
+            con información de compatibilidad y una atención clara, cercana y especializada."
           </p>
         </div>
       </section>
@@ -189,23 +189,24 @@ export default function NosotrosPage() {
       <section className="bg-yellow-400 px-6 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-4 text-2xl font-bold text-black">
-            ¿Listo para encontrar lo que necesita?
+            ¿No sabe cuál referencia necesita?
           </h2>
           <p className="mb-8 text-sm leading-relaxed text-zinc-700">
-            Explore nuestro catálogo completo o comuníquese directamente con nuestro equipo.
+            Comuníquese con nuestro equipo y reciba orientación para identificar el componente
+            compatible con su vehículo.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to={ROUTES.PUBLIC_CATALOG}
-              className="rounded-lg bg-black px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+              className={getButtonClassName({ variant: 'dark', size: 'lg' })}
             >
               Ver catálogo
             </Link>
             <Link
               to={ROUTES.PUBLIC_CONTACT}
-              className="rounded-lg border border-black/30 bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-colors hover:bg-yellow-500"
+              className={getButtonClassName({ size: 'lg', className: 'border-black/20' })}
             >
-              Contáctenos
+              Solicitar asesoría
             </Link>
           </div>
         </div>

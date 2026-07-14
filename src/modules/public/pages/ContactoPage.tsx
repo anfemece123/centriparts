@@ -1,32 +1,37 @@
+import { getButtonClassName } from '@/shared/components/ui'
+import { BUSINESS_LOCATION } from '@/shared/constants'
+import LocationSection from '@/modules/public/components/LocationSection'
+
 const CONTACT_CARDS = [
   {
     label: 'Teléfono',
     value: '+57 350 316 0713',
-    detail: 'Llámenos directamente',
+    detail: 'Consulte referencias y compatibilidad',
     href: 'tel:+573503160713',
     icon: '📞',
   },
   {
     label: 'WhatsApp',
     value: '+57 350 316 0713',
-    detail: 'Escríbanos por WhatsApp',
-    href: 'https://wa.me/573503160713?text=Hola%2C%20estoy%20interesado%20en%20sus%20productos',
+    detail: 'Reciba orientación personalizada',
+    href: 'https://wa.me/573503160713?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20un%20componente%20el%C3%A9ctrico%20o%20electr%C3%B3nico%20para%20mi%20veh%C3%ADculo',
     icon: '💬',
     external: true,
   },
   {
     label: 'Correo electrónico',
     value: 'centripartsjed@outlook.es',
-    detail: 'Respuesta en menos de 24 horas',
+    detail: 'Envíe su consulta o referencia',
     href: 'mailto:centripartsjed@outlook.es',
     icon: '✉',
   },
   {
     label: 'Dirección',
-    value: 'Bogotá, Colombia',
-    detail: 'Contáctenos para coordinar visitas',
-    href: undefined,
+    value: BUSINESS_LOCATION.city,
+    detail: `${BUSINESS_LOCATION.street} · ${BUSINESS_LOCATION.area}`,
+    href: BUSINESS_LOCATION.googleMapsUrl,
     icon: '📍',
+    external: true,
   },
 ]
 
@@ -44,13 +49,14 @@ export default function ContactoPage() {
       <section className="border-b border-zinc-100 bg-zinc-900 px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-yellow-400">
-            Estamos aquí para ayudarle
+            Estamos para ayudarle
           </p>
           <h1 className="text-4xl font-bold text-white sm:text-5xl">
             Contacto
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-zinc-400">
-            Comuníquese con nuestro equipo a través del canal que prefiera. Respondemos con rapidez.
+            Consulte disponibilidad, referencias y compatibilidad de nuestros componentes
+            eléctricos y electrónicos para vehículos.
           </p>
         </div>
       </section>
@@ -103,6 +109,8 @@ export default function ContactoPage() {
 
         </div>
       </section>
+
+      <LocationSection />
 
       {/* ── Schedule ─────────────────────────────────────────────────── */}
       <section className="bg-zinc-50 px-6 py-20">
@@ -162,20 +170,20 @@ export default function ContactoPage() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-zinc-900">
-                Contáctenos por WhatsApp
+                Reciba asesoría por WhatsApp
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-zinc-500">
-                La forma más rápida de resolver sus dudas, consultar disponibilidad
-                o solicitar una cotización personalizada.
+                Comuníquese con nuestro equipo para consultar disponibilidad, referencias
+                y compatibilidad de componentes eléctricos y electrónicos.
               </p>
             </div>
             <a
-              href="https://wa.me/573503160713?text=Hola%2C%20estoy%20interesado%20en%20sus%20productos"
+              href="https://wa.me/573503160713?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20un%20componente%20el%C3%A9ctrico%20o%20electr%C3%B3nico%20para%20mi%20veh%C3%ADculo"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-600"
+              className={getButtonClassName({ variant: 'whatsapp', size: 'lg' })}
             >
-              Escribir por WhatsApp
+              Consultar por WhatsApp
             </a>
           </div>
         </div>

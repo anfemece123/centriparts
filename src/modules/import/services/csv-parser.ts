@@ -33,6 +33,25 @@ export function parseCsvText(text: string): Record<string, string>[] {
   // Build a map from normalized header → original position so downstream
   // code always receives the normalized key as the record key.
   const normalizedHeaders = rawHeaders.map(normalizeHeader)
+
+  // Some Excel exports from the inventory system leave the vehicle-brand
+  // column header blank even though the column data is present. It sits
+  // directly between PRECIO DE VENTA and COSTO INICIAL. Recover that known
+  // layout so a valid inventory is not rejected solely because of the blank
+  // exported header.
+  if (!normalizedHeaders.includes('MARCA CARROS')) {
+    const salePriceIndex = normalizedHeaders.indexOf('PRECIO DE VENTA')
+    const costPriceIndex = normalizedHeaders.indexOf('COSTO INICIAL')
+    const vehicleBrandIndex = salePriceIndex + 1
+
+    if (
+      salePriceIndex >= 0 &&
+      costPriceIndex === salePriceIndex + 2 &&
+      normalizedHeaders[vehicleBrandIndex] === ''
+    ) {
+      normalizedHeaders[vehicleBrandIndex] = 'MARCA CARROS'
+    }
+  }
   const rows: Record<string, string>[] = []
 
   for (let i = 1; i < lines.length; i++) {

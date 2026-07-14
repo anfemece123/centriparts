@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getOrderForTracking } from '@/modules/orders/services/tracking.service'
+import { Button } from '@/shared/components/ui'
 import type {
   PublicOrderView,
   PublicOrderHistoryEntry,
@@ -348,13 +349,13 @@ export default function TrackingPage() {
             />
           </div>
 
-          <button
+          <Button
             type="submit"
             disabled={loading || !orderNumber.trim() || !email.trim()}
-            className="w-full rounded-xl bg-yellow-400 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full"
           >
             {loading ? 'Buscando…' : 'Buscar pedido'}
-          </button>
+          </Button>
         </div>
       </form>
 

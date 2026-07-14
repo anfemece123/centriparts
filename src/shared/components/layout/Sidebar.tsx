@@ -8,6 +8,7 @@ const navItems = [
   { label: t.nav.products,   path: ROUTES.ADMIN_PRODUCTS    },
   { label: t.nav.categories, path: ROUTES.ADMIN_CATEGORIES  },
   { label: t.nav.orders,     path: ROUTES.ADMIN_ORDERS      },
+  { label: t.nav.visualSearch, path: ROUTES.ADMIN_VISUAL_SEARCH },
 ]
 
 export default function Sidebar() {

@@ -11,7 +11,7 @@ export default function CartIconButton() {
     <button
       onClick={() => dispatch(openCart())}
       aria-label={`Abrir carrito${totalItems > 0 ? `, ${totalItems} productos` : ''}`}
-      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 transition-colors hover:bg-zinc-100"
+      className="relative flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100"
     >
       {/* Shopping cart icon */}
       <svg

@@ -9,6 +9,7 @@ export const t = {
     inventory: 'Inventario',
     orders: 'Pedidos',
     customers: 'Clientes',
+    visualSearch: 'Búsqueda visual',
   },
   home: {
     welcome: 'Bienvenido a Centriparts',

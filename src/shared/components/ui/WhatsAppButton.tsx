@@ -1,15 +1,15 @@
 export default function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/573503160713?text=Hola%2C%20estoy%20interesado%20en%20sus%20productos"
+      href="https://wa.me/573503160713?text=Hola%2C%20necesito%20asesor%C3%ADa%20sobre%20un%20componente%20el%C3%A9ctrico%20o%20electr%C3%B3nico%20para%20mi%20veh%C3%ADculo"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Escríbenos por WhatsApp"
+      aria-label="Solicitar asesoría por WhatsApp"
       className="group fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg shadow-green-900/30 transition-transform hover:scale-110"
     >
       {/* Tooltip */}
       <span className="pointer-events-none absolute right-16 whitespace-nowrap rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-        Escríbenos
+        Solicitar asesoría
       </span>
 
       {/* WhatsApp icon */}

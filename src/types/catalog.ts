@@ -109,7 +109,19 @@ export interface ProductListItem {
   sale_price: number
   type: Pick<ProductType, 'id' | 'name'> | null
   brand: Pick<ProductBrand, 'id' | 'name'> | null
-  primary_category: Pick<Category, 'id' | 'name'> | null
+  categories: Array<{
+    is_primary: boolean
+    category: Pick<Category, 'id' | 'name' | 'parent_id'>
+  }>
+  compatibility: Array<{
+    id: string
+    year_from: number | null
+    year_to: number | null
+    is_verified: boolean
+    vehicle_brand: Pick<VehicleBrand, 'id' | 'name'> | null
+    vehicle_model: Pick<VehicleModel, 'id' | 'name'> | null
+  }>
+  images: Pick<ProductImage, 'storage_path' | 'alt_text' | 'is_primary' | 'display_order'>[]
   created_at: string
 }
 
@@ -120,5 +132,14 @@ export interface PublicProductListItem {
   sale_price: number
   description: string | null
   brand: Pick<ProductBrand, 'id' | 'name'> | null
+  images: Pick<ProductImage, 'storage_path' | 'alt_text' | 'is_primary' | 'display_order'>[]
+}
+
+export interface ProductSearchSuggestion {
+  id: string
+  ci: string
+  base_name: string
+  display_name: string | null
+  reference: string | null
   images: Pick<ProductImage, 'storage_path' | 'alt_text' | 'is_primary' | 'display_order'>[]
 }

@@ -1,0 +1,16 @@
+# Lightweight subset actually installed and run in CI/sandbox environments
+# without a full ML stack. Tests inject a dummy VisualEmbeddingProvider/OCR
+# engine (see tests/fakes.py) and never import torch/transformers/pytesseract,
+# so this file intentionally omits them.
+
+fastapi>=0.115,<1.0
+pydantic>=2.9,<3.0
+pydantic-settings>=2.6,<3.0
+python-multipart>=0.0.12
+pillow>=11.0,<12.0
+numpy>=2.1,<3.0
+
+httpx>=0.27
+pytest>=8.3
+ruff>=0.7
+mypy>=1.13

@@ -8,8 +8,8 @@ const FOOTER_SECTIONS = [
     links: [
       { label: 'Todos los productos', to: ROUTES.PUBLIC_CATALOG },
       { label: 'Sensores',            to: ROUTES.PUBLIC_CATALOG },
-      { label: 'Bombas de agua',      to: ROUTES.PUBLIC_CATALOG },
-      { label: 'Filtros',             to: ROUTES.PUBLIC_CATALOG },
+      { label: 'Componentes eléctricos', to: ROUTES.PUBLIC_CATALOG },
+      { label: 'Componentes electrónicos', to: ROUTES.PUBLIC_CATALOG },
     ],
   },
   {
@@ -17,7 +17,7 @@ const FOOTER_SECTIONS = [
     links: [
       { label: 'Nosotros',          to: ROUTES.PUBLIC_ABOUT   },
       { label: 'Misión y valores',  to: ROUTES.PUBLIC_ABOUT   },
-      { label: 'Trabaja con nosotros', to: ROUTES.PUBLIC_CONTACT },
+      { label: 'Asesoría especializada', to: ROUTES.PUBLIC_CONTACT },
     ],
   },
   {
@@ -42,12 +42,13 @@ export default function PublicFooter() {
             <Link to={ROUTES.PUBLIC_HOME} className="transition-opacity hover:opacity-75">
               <img
                 src={logo}
-                alt="Centriparts"
+                alt="Centriparts, especialistas en componentes eléctricos y electrónicos"
                 className="h-14 w-auto object-contain brightness-0 invert"
               />
             </Link>
             <p className="text-sm leading-relaxed">
-              Distribuidores de repuestos automotrices con amplia experiencia en el mercado colombiano.
+              Especialistas en componentes eléctricos y electrónicos para vehículos, con atención
+              personalizada y orientación en la búsqueda de referencias.
             </p>
             <div className="flex flex-col gap-1 text-sm">
               <a

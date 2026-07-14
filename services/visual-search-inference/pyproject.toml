@@ -1,0 +1,22 @@
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008 (function call in argument default) is the standard FastAPI
+# dependency-injection idiom (`= Depends(...)`), not a real bug here.
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_ignores = true
+disallow_untyped_defs = false
+ignore_missing_imports = false
+
+# Heavy/optional deps not installed in every environment (see
+# requirements-test.txt) — silence "missing stubs" noise for them
+# specifically rather than globally disabling import checking.
+[[tool.mypy.overrides]]
+module = ["torch.*", "transformers.*", "pytesseract.*"]
+ignore_missing_imports = true

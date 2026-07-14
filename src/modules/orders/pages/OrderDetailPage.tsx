@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { PageHeader, Card, Badge, Button } from '@/shared/components/ui'
+import { PageHeader, Card, Badge, Button, getButtonClassName } from '@/shared/components/ui'
 import {
   getOrder,
   updateOrderStatus,
@@ -353,7 +353,7 @@ export default function OrderDetailPage() {
                 href={buildWaLink(order.customer_phone, order.order_number, order.customer_name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-600"
+                className={getButtonClassName({ variant: 'whatsapp' })}
               >
                 {/* WhatsApp icon */}
                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">

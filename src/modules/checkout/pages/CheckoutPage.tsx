@@ -9,6 +9,7 @@ import CustomerForm, { type CustomerFormFields } from '../components/CustomerFor
 import ShippingForm, { type ShippingFormFields } from '../components/ShippingForm'
 import PaymentMethodSelector from '../components/PaymentMethodSelector'
 import CheckoutSummary from '../components/CheckoutSummary'
+import { Button, getButtonClassName } from '@/shared/components/ui'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Form state
@@ -89,7 +90,7 @@ export default function CheckoutPage() {
         <p className="text-sm text-zinc-500">Tu carrito está vacío.</p>
         <Link
           to={ROUTES.PUBLIC_CATALOG}
-          className="rounded-lg bg-yellow-400 px-5 py-2.5 text-sm font-semibold text-black hover:bg-yellow-500"
+          className={getButtonClassName()}
         >
           Explorar catálogo
         </Link>
@@ -249,13 +250,14 @@ export default function CheckoutPage() {
                 </p>
               )}
 
-              <button
+              <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-xl bg-yellow-400 py-3.5 text-sm font-bold text-black transition-colors hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-60"
+                size="lg"
+                className="w-full"
               >
                 {submitting ? 'Procesando pedido…' : `Realizar pedido · ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(subtotal)}`}
-              </button>
+              </Button>
 
               <p className="text-center text-xs text-zinc-400">
                 Al realizar el pedido, un asesor se pondrá en contacto para confirmar

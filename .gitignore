@@ -11,6 +11,13 @@ node_modules
 dist
 dist-ssr
 *.local
+backups/
+
+# Visual search evaluation harness: real catalog/customer photos and
+# generated reports should never be committed.
+scripts/visual-eval/photos/
+scripts/visual-eval/reports/
+scripts/visual-eval/manifest.json
 
 # Editor directories and files
 .vscode/*

@@ -1,11 +1,50 @@
 import { supabase } from '@/lib/supabase'
-import type { Product, ProductStatus, ProductWithRelations, ProductListItem, PublicProductListItem } from '@/types'
+import type {
+  Product,
+  ProductListItem,
+  ProductSearchSuggestion,
+  ProductStatus,
+  ProductWithRelations,
+  PublicProductListItem,
+} from '@/types'
+
+function safeSearchTerm(value: string): string {
+  return value.trim().replace(/[,()%]/g, ' ').replace(/\s+/g, ' ')
+}
+
+export async function searchProductSuggestions(
+  search: string,
+  options: { publicOnly?: boolean; limit?: number } = {},
+): Promise<ProductSearchSuggestion[]> {
+  const term = safeSearchTerm(search)
+  if (term.length < 2) return []
+
+  let query = supabase
+    .from('products')
+    .select(`
+      id, ci, base_name, display_name, reference,
+      images:product_images ( storage_path, alt_text, is_primary, display_order )
+    `)
+    .or(
+      `base_name.ilike.%${term}%,display_name.ilike.%${term}%,ci.ilike.%${term}%,reference.ilike.%${term}%`,
+    )
+    .order('base_name', { ascending: true })
+    .limit(Math.min(Math.max(options.limit ?? 6, 1), 10))
+
+  if (options.publicOnly) query = query.eq('status', 'published')
+
+  const { data, error } = await query
+  if (error) throw error
+  return (data ?? []) as unknown as ProductSearchSuggestion[]
+}
 
 export interface ListProductsParams {
   status?: ProductStatus
   search?: string
   typeId?: string
   brandId?: string
+  categoryId?: string
+  subcategoryId?: string
   page?: number
   pageSize?: number
 }
@@ -14,9 +53,22 @@ export async function listProducts(params: ListProductsParams = {}): Promise<{
   data: ProductListItem[]
   count: number
 }> {
-  const { status, search, typeId, brandId, page = 1, pageSize = 50 } = params
+  const {
+    status,
+    search,
+    typeId,
+    brandId,
+    categoryId,
+    subcategoryId,
+    page = 1,
+    pageSize = 50,
+  } = params
   const from = (page - 1) * pageSize
   const to = from + pageSize - 1
+  const effectiveCategoryId = subcategoryId || categoryId
+  const categoryFilterJoin = effectiveCategoryId
+    ? ', category_filter:product_categories!inner ( category_id )'
+    : ''
 
   let query = supabase
     .from('products')
@@ -24,7 +76,18 @@ export async function listProducts(params: ListProductsParams = {}): Promise<{
       `
       id, ci, base_name, display_name, reference, status, stock, sale_price, created_at,
       type:type_id ( id, name ),
-      brand:brand_id ( id, name )
+      brand:brand_id ( id, name ),
+      categories:product_categories (
+        is_primary,
+        category:category_id ( id, name, parent_id )
+      ),
+      compatibility:product_compatibility (
+        id, year_from, year_to, is_verified,
+        vehicle_brand:vehicle_brand_id ( id, name ),
+        vehicle_model:vehicle_model_id ( id, name )
+      ),
+      images:product_images ( storage_path, alt_text, is_primary, display_order )
+      ${categoryFilterJoin}
       `,
       { count: 'exact' },
     )
@@ -34,6 +97,9 @@ export async function listProducts(params: ListProductsParams = {}): Promise<{
   if (status) query = query.eq('status', status)
   if (typeId) query = query.eq('type_id', typeId)
   if (brandId) query = query.eq('brand_id', brandId)
+  if (effectiveCategoryId) {
+    query = query.eq('category_filter.category_id', effectiveCategoryId)
+  }
   if (search) {
     query = query.or(
       `base_name.ilike.%${search}%,display_name.ilike.%${search}%,ci.ilike.%${search}%,reference.ilike.%${search}%`,
@@ -47,19 +113,32 @@ export async function listProducts(params: ListProductsParams = {}): Promise<{
 
 export async function listPublicProducts(params: {
   search?: string
+  typeId?: string
   brandId?: string
   categoryId?: string
+  subcategoryId?: string
+  sort?: 'newest' | 'price-asc' | 'price-desc'
   page?: number
   pageSize?: number
 } = {}): Promise<{ data: PublicProductListItem[]; count: number }> {
-  const { search, brandId, categoryId, page = 1, pageSize = 24 } = params
+  const {
+    search,
+    typeId,
+    brandId,
+    categoryId,
+    subcategoryId,
+    sort = 'newest',
+    page = 1,
+    pageSize = 24,
+  } = params
   const from = (page - 1) * pageSize
   const to = from + pageSize - 1
+  const effectiveCategoryId = subcategoryId || categoryId
 
   // When filtering by category, add !inner join so only products in that category are returned.
   // Without a category filter, the join is omitted so products without categories are included.
-  const categoryJoin = categoryId
-    ? `, product_categories!inner ( category_id )`
+  const categoryJoin = effectiveCategoryId
+    ? `, public_category_filter:product_categories!inner ( category_id )`
     : ''
 
   let query = supabase
@@ -74,18 +153,31 @@ export async function listPublicProducts(params: {
       { count: 'exact' },
     )
     .eq('status', 'published')
-    .range(from, to)
-    .order('created_at', { ascending: false })
 
   if (search) {
-    query = query.or(`base_name.ilike.%${search}%,display_name.ilike.%${search}%`)
+    query = query.or(
+      `base_name.ilike.%${search}%,display_name.ilike.%${search}%,reference.ilike.%${search}%,ci.ilike.%${search}%`,
+    )
+  }
+  if (typeId) {
+    query = query.eq('type_id', typeId)
   }
   if (brandId) {
     query = query.eq('brand_id', brandId)
   }
-  if (categoryId) {
-    query = query.eq('product_categories.category_id', categoryId)
+  if (effectiveCategoryId) {
+    query = query.eq('public_category_filter.category_id', effectiveCategoryId)
   }
+
+  if (sort === 'price-asc') {
+    query = query.order('sale_price', { ascending: true })
+  } else if (sort === 'price-desc') {
+    query = query.order('sale_price', { ascending: false })
+  } else {
+    query = query.order('created_at', { ascending: false })
+  }
+
+  query = query.range(from, to)
 
   const { data, error, count } = await query
   if (error) throw error
@@ -122,13 +214,16 @@ export async function updateProductStatus(id: string, status: ProductStatus): Pr
 }
 
 export interface UpdateProductDetailsPayload {
+  base_name?: string
   display_name?: string | null
   reference?: string | null
   description?: string | null
   sale_price?: number
+  cost_price?: number
   stock?: number
   type_id?: string | null
   brand_id?: string | null
+  status?: ProductStatus
 }
 
 export async function updateProductDetails(

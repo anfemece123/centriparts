@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { deriveProductCategory } from '@/modules/import/services/category-derivation'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,9 +23,9 @@ export interface NameAnalysisRow {
  *   - Ambiguous only when base_name is empty or unparseable
  */
 export function parseProductName(product: { id: string; base_name: string }): NameAnalysisRow {
-  const name = product.base_name.trim()
+  const derived = deriveProductCategory(product.base_name)
 
-  if (!name) {
+  if (!derived) {
     return {
       id: product.id,
       base_name: product.base_name,
@@ -35,17 +36,15 @@ export function parseProductName(product: { id: string; base_name: string }): Na
     }
   }
 
-  const words = name.split(/\s+/)
-  const category = words[0]
-  const subcategory = words.length > 1 ? words.slice(1).join(' ') : null
-
   return {
     id: product.id,
     base_name: product.base_name,
-    detected_category: category,
-    detected_subcategory: subcategory,
+    detected_category: derived.mainCategory,
+    detected_subcategory: derived.subcategory
+      ? derived.subcategory.slice(derived.mainCategory.length).trim()
+      : null,
     confidence: 'clear',
-    note: subcategory === null ? 'Una sola palabra; sin subcategoría.' : null,
+    note: derived.subcategory === null ? 'Una sola palabra; sin subcategoría.' : null,
   }
 }
 

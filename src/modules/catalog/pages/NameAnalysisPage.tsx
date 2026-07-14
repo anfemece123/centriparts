@@ -120,18 +120,14 @@ export default function NameAnalysisPage() {
                 opt.value === 'all' ? total :
                 opt.value === 'clear' ? clear : ambiguous
               return (
-                <button
+                <Button
                   key={opt.value}
                   onClick={() => setFilter(opt.value)}
-                  className={[
-                    'rounded-md border px-4 py-1.5 text-sm font-medium transition-colors',
-                    filter === opt.value
-                      ? 'border-yellow-400 bg-yellow-400 text-black'
-                      : 'border-zinc-200 text-zinc-600 hover:bg-zinc-50',
-                  ].join(' ')}
+                  variant={filter === opt.value ? 'primary' : 'secondary'}
+                  size="sm"
                 >
                   {opt.label} ({count})
-                </button>
+                </Button>
               )
             })}
           </div>
@@ -191,21 +187,23 @@ export default function NameAnalysisPage() {
                 Mostrando {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)} de {filtered.length}
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-40"
+                  variant="secondary"
+                  size="sm"
                 >
                   Anterior
-                </button>
+                </Button>
                 <span className="tabular-nums">Página {page} de {totalPages}</span>
-                <button
+                <Button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-40"
+                  variant="secondary"
+                  size="sm"
                 >
                   Siguiente
-                </button>
+                </Button>
               </div>
             </div>
           )}

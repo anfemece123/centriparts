@@ -36,6 +36,20 @@ enable_confirmations = false
 [functions."send-email"]
 verify_jwt = false
 
+# visual-product-search powers the public storefront's "Buscar repuesto por
+# foto" feature — same reasoning as send-email above: called from
+# unauthenticated public pages, so it cannot rely on JWT verification.
+# Security is handled via the optional x-internal-secret header and a
+# per-IP rate limit (see supabase/functions/visual-product-search).
+[functions."visual-product-search"]
+verify_jwt = false
+
+# index-product-image, reindex-catalog-images, visual-embedding-worker and
+# backfill-visual-embeddings are admin-only tools and intentionally keep the
+# default verify_jwt = true (not listed here), so only an authenticated
+# admin session (or a scheduled invocation using the service role key) can
+# invoke them.
+
 # ── Database ──────────────────────────────────────────────────────────────────
 [db]
 port        = 54322

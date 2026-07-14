@@ -4,6 +4,7 @@ import { getProductById } from '@/modules/catalog/services/products.service'
 import { getPublicImageUrl } from '@/modules/catalog/services/product-images.service'
 import { useAppDispatch } from '@/store'
 import { addItem, openCart } from '@/modules/cart/store/cartSlice'
+import { Button } from '@/shared/components/ui'
 import type { ProductWithRelations, ProductImage } from '@/types'
 
 const priceFormatter = new Intl.NumberFormat('es-CO', {
@@ -30,6 +31,7 @@ export default function PublicProductPage() {
 
   useEffect(() => {
     if (!id) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-mount/id-change pattern; resets loading/error synchronously before the new request starts.
     setLoading(true)
     setError(null)
 
@@ -150,12 +152,13 @@ export default function PublicProductPage() {
               {priceFormatter.format(product.sale_price)}
             </p>
 
-            <button
+            <Button
               onClick={handleAddToCart}
-              className="mt-2 w-full rounded-xl bg-yellow-400 py-3.5 text-sm font-bold text-black transition-colors hover:bg-yellow-500 sm:w-auto sm:px-8"
+              size="lg"
+              className="mt-2 w-full sm:w-auto"
             >
               {addedFeedback ? '¡Agregado al carrito!' : 'Agregar al carrito'}
-            </button>
+            </Button>
 
             {product.description && (
               <div className="border-t border-zinc-100 pt-5">

@@ -158,13 +158,14 @@ export default function ProductCategorySection({
             <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
               Categoría principal
             </span>
-            <button
+            <Button
               type="button"
               onClick={() => setModalMode('main')}
-              className="text-xs font-medium text-yellow-600 hover:text-yellow-500 transition-colors"
+              variant="ghost"
+              size="sm"
             >
               + Nueva categoría
-            </button>
+            </Button>
           </div>
 
           <div className="flex items-center gap-2">
@@ -199,13 +200,14 @@ export default function ProductCategorySection({
               Subcategoría principal
             </span>
             {primaryRow && (
-              <button
+              <Button
                 type="button"
                 onClick={() => setModalMode('sub')}
-                className="text-xs font-medium text-yellow-600 hover:text-yellow-500 transition-colors"
+                variant="ghost"
+                size="sm"
               >
                 + Nueva subcategoría
-              </button>
+              </Button>
             )}
           </div>
 
@@ -216,13 +218,15 @@ export default function ProductCategorySection({
           ) : subCategories.length === 0 && !subcategoryRow ? (
             <p className="text-sm italic text-zinc-400">
               No hay subcategorías.{' '}
-              <button
+              <Button
                 type="button"
-                className="font-medium not-italic text-yellow-600 hover:underline"
+                variant="ghost"
+                size="sm"
+                className="ml-1 h-7 align-middle not-italic"
                 onClick={() => setModalMode('sub')}
               >
                 Crear una
-              </button>
+              </Button>
             </p>
           ) : (
             <div className="flex items-center gap-2">
@@ -269,7 +273,7 @@ export default function ProductCategorySection({
                     type="button"
                     onClick={() => handleRemove(row.category.id)}
                     disabled={busy}
-                    className="text-zinc-400 hover:text-red-500 transition-colors disabled:opacity-50 leading-none text-base"
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-base leading-none text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-50"
                     aria-label={`Quitar ${row.category.name}`}
                   >
                     ×

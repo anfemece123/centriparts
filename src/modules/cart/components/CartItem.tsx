@@ -56,7 +56,7 @@ export default function CartItem({ item }: Props) {
           <button
             onClick={handleRemove}
             aria-label="Eliminar producto"
-            className="shrink-0 text-zinc-300 transition-colors hover:text-red-500"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-zinc-300 transition-colors hover:bg-red-50 hover:text-red-500"
           >
             {/* × icon */}
             <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function CartItem({ item }: Props) {
         <div className="mt-1 flex items-center justify-between">
 
           {/* Quantity stepper */}
-          <div className="flex items-center rounded-lg border border-zinc-200">
+          <div className="flex items-center rounded-full border border-zinc-200">
             <button
               onClick={handleDecrement}
               aria-label="Reducir cantidad"

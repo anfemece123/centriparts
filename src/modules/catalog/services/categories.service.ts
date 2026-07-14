@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { slugify } from '@/shared/utils/slugify'
-import type { Category } from '@/types'
+import type { Category, CategoryTreeNode } from '@/types'
 
 export async function listCategories(options?: { includeInactive?: boolean }): Promise<Category[]> {
   let query = supabase.from('categories').select('*').order('name', { ascending: true })
@@ -86,6 +86,49 @@ export async function removeProductFromCategory(
     .eq('product_id', productId)
     .eq('category_id', categoryId)
   if (error) throw error
+}
+
+/**
+ * Builds the real category tree, at any depth, from a flat list — used by
+ * the visual search category selector. Root categories are the ones with
+ * parent_id === null; every other category nests under its parent_id.
+ * Guards against cycles so a corrupted parent_id chain can never loop.
+ */
+export function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
+  const byId = new Map(categories.map((c) => [c.id, c]))
+  const childrenByParent = new Map<string, Category[]>()
+
+  for (const category of categories) {
+    if (category.parent_id === null) continue
+    const siblings = childrenByParent.get(category.parent_id) ?? []
+    siblings.push(category)
+    childrenByParent.set(category.parent_id, siblings)
+  }
+  childrenByParent.forEach((siblings) => siblings.sort((a, b) => a.name.localeCompare(b.name)))
+
+  function buildNode(category: Category, depth: number, visited: Set<string>): CategoryTreeNode {
+    const children = visited.has(category.id)
+      ? []
+      : (childrenByParent.get(category.id) ?? []).map((child) =>
+          buildNode(child, depth + 1, new Set(visited).add(category.id)),
+        )
+    return { id: category.id, name: category.name, depth, children }
+  }
+
+  return categories
+    .filter((c) => c.parent_id === null || !byId.has(c.parent_id))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((c) => buildNode(c, 0, new Set()))
+}
+
+/** Flattens a category tree into a depth-ordered list, for rendering a <select>. */
+export function flattenCategoryTree(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
+  const result: CategoryTreeNode[] = []
+  for (const node of nodes) {
+    result.push(node)
+    result.push(...flattenCategoryTree(node.children))
+  }
+  return result
 }
 
 export async function deleteCategory(id: string): Promise<void> {

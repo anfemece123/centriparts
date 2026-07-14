@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { t } from '@/shared/translations'
 import { ROUTES } from '@/shared/constants'
-import { useAuth } from '@/modules/auth/context/AuthContext'
+import { useAuth } from '@/modules/auth/context/auth-context'
+import { Button } from '@/shared/components/ui'
 
 export default function Topbar() {
   const { user, signOut } = useAuth()
@@ -31,13 +32,14 @@ export default function Topbar() {
             {user.email}
           </span>
         )}
-        <button
+        <Button
           onClick={handleSignOut}
           disabled={signingOut}
-          className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900 disabled:opacity-50"
+          variant="secondary"
+          size="sm"
         >
           {signingOut ? 'Saliendo…' : 'Cerrar sesión'}
-        </button>
+        </Button>
       </div>
     </header>
   )

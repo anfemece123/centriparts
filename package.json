@@ -7,7 +7,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "catalog:replace": "node --experimental-strip-types scripts/replace-catalog-from-csv.ts",
+    "catalog:categories": "node --experimental-strip-types scripts/replace-catalog-from-csv.ts --categories-only",
+    "visual-eval:init": "node --experimental-strip-types scripts/visual-eval/cli.ts init-manifest",
+    "visual-eval:run": "node --experimental-strip-types scripts/visual-eval/cli.ts run",
+    "visual-eval:compare": "node --experimental-strip-types scripts/visual-eval/cli.ts compare"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
@@ -31,6 +37,7 @@
     "globals": "^17.4.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.1.10"
   }
 }

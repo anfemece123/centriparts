@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Badge, ConfirmModal } from '@/shared/components/ui'
+import { Button, Badge, ConfirmModal, getButtonClassName } from '@/shared/components/ui'
 import {
   deleteCompatibilityRow,
   verifyCompatibilityRow,
@@ -42,11 +42,11 @@ const PARSE_BADGE: Record<ParseStatus, 'success' | 'warning' | 'info'> = {
 // ── Action button styles ──────────────────────────────────────────────────────
 
 const actionBtn =
-  'text-xs font-medium text-zinc-500 hover:text-zinc-800 transition-colors px-1 py-0.5 disabled:opacity-40'
+  getButtonClassName({ variant: 'ghost', size: 'sm', className: 'h-7 px-2 disabled:opacity-40' })
 const actionBtnDanger =
-  'text-xs font-medium text-red-400 hover:text-red-600 transition-colors px-1 py-0.5 disabled:opacity-40'
+  getButtonClassName({ variant: 'ghost', size: 'sm', className: 'h-7 px-2 text-red-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-40' })
 const actionBtnVerify =
-  'text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors px-1 py-0.5 disabled:opacity-40'
+  getButtonClassName({ variant: 'ghost', size: 'sm', className: 'h-7 px-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 disabled:opacity-40' })
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -210,7 +210,6 @@ export default function ProductCompatibilitySection({
                               >
                                 {isVerifying ? '…' : 'Verificar'}
                               </button>
-                              <span className="text-zinc-200">|</span>
                             </>
                           )}
                           <button
@@ -220,7 +219,6 @@ export default function ProductCompatibilitySection({
                           >
                             Editar
                           </button>
-                          <span className="text-zinc-200">|</span>
                           <button
                             type="button"
                             className={actionBtnDanger}

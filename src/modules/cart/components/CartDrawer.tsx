@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { closeCart } from '../store/cartSlice'
 import CartItem from './CartItem'
+import { Button, getButtonClassName } from '@/shared/components/ui'
 
 const priceFormatter = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -68,7 +69,7 @@ export default function CartDrawer() {
           <button
             onClick={() => dispatch(closeCart())}
             aria-label="Cerrar carrito"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
           >
             <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden="true">
               <path d="M4.293 4.293a1 1 0 011.414 0L8 6.586l2.293-2.293a1 1 0 111.414 1.414L9.414 8l2.293 2.293a1 1 0 01-1.414 1.414L8 9.414l-2.293 2.293a1 1 0 01-1.414-1.414L6.586 8 4.293 5.707a1 1 0 010-1.414z" />
@@ -91,12 +92,13 @@ export default function CartDrawer() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
               </svg>
               <p className="text-sm text-zinc-400">Tu carrito está vacío.</p>
-              <button
+              <Button
                 onClick={() => dispatch(closeCart())}
-                className="text-sm font-medium text-yellow-600 hover:text-yellow-700"
+                variant="ghost"
+                size="sm"
               >
                 Explorar catálogo
-              </button>
+              </Button>
             </div>
           ) : (
             <div className="divide-y divide-zinc-100">
@@ -124,16 +126,17 @@ export default function CartDrawer() {
               <Link
                 to="/checkout"
                 onClick={() => dispatch(closeCart())}
-                className="block rounded-lg bg-yellow-400 px-4 py-3 text-center text-sm font-semibold text-black transition-colors hover:bg-yellow-500"
+                className={getButtonClassName({ className: 'w-full' })}
               >
                 Proceder al pedido
               </Link>
-              <button
+              <Button
                 onClick={() => dispatch(closeCart())}
-                className="rounded-lg border border-zinc-200 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+                variant="secondary"
+                className="w-full"
               >
                 Seguir comprando
-              </button>
+              </Button>
             </div>
 
           </div>

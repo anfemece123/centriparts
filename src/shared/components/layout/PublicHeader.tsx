@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants'
 import logo from '@/assets/logo-centriparts.png'
 import CartIconButton from '@/modules/cart/components/CartIconButton'
+import { getButtonClassName } from '@/shared/components/ui'
 
 const NAV_LINKS = [
   { label: 'Inicio',     to: ROUTES.PUBLIC_HOME     },
@@ -35,10 +36,14 @@ export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  // Close mobile menu on route change. Adjusted during render (React's
+  // documented pattern for "adjusting state when a prop/dependency
+  // changes") rather than inside an Effect.
+  const [prevPathname, setPrevPathname] = useState(location.pathname)
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname)
     setMobileOpen(false)
-  }, [location.pathname])
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
@@ -53,7 +58,7 @@ export default function PublicHeader() {
         >
           <img
             src={logo}
-            alt="Centriparts"
+            alt="Centriparts, especialistas en electricidad y electrónica automotriz"
             className="h-14 w-auto object-contain sm:h-16"
           />
         </Link>
@@ -83,7 +88,7 @@ export default function PublicHeader() {
         <div className="flex items-center gap-2">
           <Link
             to={ROUTES.PUBLIC_CATALOG}
-            className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-yellow-500"
+            className={getButtonClassName({ size: 'md' })}
           >
             <span className="hidden sm:inline">Ver catálogo</span>
             <span className="sm:hidden">Catálogo</span>
@@ -96,7 +101,7 @@ export default function PublicHeader() {
             onClick={() => setMobileOpen((o) => !o)}
             aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={mobileOpen}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 transition-colors hover:bg-zinc-100 md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-100 md:hidden"
           >
             {mobileOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PageHeader, Card, Badge, Input } from '@/shared/components/ui'
+import { PageHeader, Card, Badge, Button, Input } from '@/shared/components/ui'
 import { listOrders } from '@/modules/orders/services/orders.service'
 import { ROUTES } from '@/shared/constants'
 import type { OrderListItem, OrderStatus, PaymentStatus } from '@/modules/orders/types/orders'
@@ -106,12 +106,20 @@ export default function OrdersPage() {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
   }, [searchInput])
 
-  // Reset page on filter change
-  useEffect(() => { setPage(1) }, [statusFilter, paymentFilter])
+  // Reset page on filter change. Adjusted during render (React's documented
+  // pattern for "adjusting state when a prop/dependency changes") rather
+  // than inside an Effect.
+  const filterKey = `${statusFilter}|${paymentFilter}`
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey)
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey)
+    setPage(1)
+  }
 
   // Fetch
   useEffect(() => {
     let cancelled = false
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-deps-change pattern; state is reset synchronously so the previous page's data/error never flashes while the new request is in flight.
     setLoading(true)
     setError(null)
 
@@ -248,23 +256,25 @@ export default function OrdersPage() {
             Mostrando {pageStart}–{pageEnd} de {totalCount.toLocaleString('es-CO')} pedidos
           </span>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+              variant="secondary"
+              size="sm"
             >
               Anterior
-            </button>
+            </Button>
             <span className="px-2 tabular-nums">
               Página {page} de {totalPages}
             </span>
-            <button
+            <Button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+              variant="secondary"
+              size="sm"
             >
               Siguiente
-            </button>
+            </Button>
           </div>
         </div>
       )}

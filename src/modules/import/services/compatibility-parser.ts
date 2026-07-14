@@ -10,13 +10,16 @@ const LONG_YEAR_RANGE_RE  = /(\d{4})\s*(?:-|–|AL|al)\s*(\d{4})/gi
 // \b ensures we don't match inside longer numbers.
 // Decimal-point engine specs (1.4/1.6) are excluded because \d{2} requires
 // two consecutive digits with no intervening dot.
-const SHORT_YEAR_RANGE_RE = /\b(\d{2})[/\-](\d{2})\b/g
+const SHORT_YEAR_RANGE_RE = /\b(\d{2})([/-])(\d{2})\b/g
 
 // Open-ended start: "DESDE 2015"
 const DESDE_RE            = /DESDE\s+(\d{4})/gi
 
 // Single 4-digit year fallback (runs last so it doesn't absorb range digits)
 const SINGLE_YEAR_RE      = /\b(\d{4})\b/g
+
+const MIN_VEHICLE_YEAR = 1900
+const MAX_VEHICLE_YEAR = 2100
 
 // ─── Engine-notation regexes ─────────────────────────────────────────────────
 //
@@ -96,21 +99,48 @@ function placeholderYears(text: string): { result: string; tokens: YearToken[] }
 
   let result = text
 
-  result = result.replace(LONG_YEAR_RANGE_RE, (match, a, b) =>
-    makeToken(match, parseInt(a, 10), parseInt(b, 10)),
-  )
+  result = result.replace(LONG_YEAR_RANGE_RE, (match, a, b) => {
+    const yearFrom = parseInt(a, 10)
+    const yearTo = parseInt(b, 10)
+    if (
+      yearFrom < MIN_VEHICLE_YEAR ||
+      yearFrom > MAX_VEHICLE_YEAR ||
+      yearTo < MIN_VEHICLE_YEAR ||
+      yearTo > MAX_VEHICLE_YEAR
+    ) return match
+    return makeToken(match, Math.min(yearFrom, yearTo), Math.max(yearFrom, yearTo))
+  })
 
-  result = result.replace(SHORT_YEAR_RANGE_RE, (match, a, b) =>
-    makeToken(match, expandShortYear(parseInt(a, 10)), expandShortYear(parseInt(b, 10))),
-  )
+  result = result.replace(SHORT_YEAR_RANGE_RE, (match, a, separator, b) => {
+    const firstYear = expandShortYear(parseInt(a, 10))
+    const secondYear = expandShortYear(parseInt(b, 10))
 
-  result = result.replace(DESDE_RE, (match, a) =>
-    makeToken(match, parseInt(a, 10), null),
-  )
+    // Slash-separated inventory ranges are sometimes exported newest-first
+    // (for example 07/02). Store those chronologically so they satisfy the
+    // database constraint. A descending hyphen pair inside a longer model
+    // sequence (RENAULT 21-19-11) is model nomenclature, not a year range.
+    if (secondYear < firstYear) {
+      return separator === '/'
+        ? makeToken(match, secondYear, firstYear)
+        : match
+    }
 
-  result = result.replace(SINGLE_YEAR_RE, (match, a) =>
-    makeToken(match, parseInt(a, 10), null),
-  )
+    return makeToken(match, firstYear, secondYear)
+  })
+
+  result = result.replace(DESDE_RE, (match, a) => {
+    const year = parseInt(a, 10)
+    return year >= MIN_VEHICLE_YEAR && year <= MAX_VEHICLE_YEAR
+      ? makeToken(match, year, null)
+      : match
+  })
+
+  result = result.replace(SINGLE_YEAR_RE, (match, a) => {
+    const year = parseInt(a, 10)
+    return year >= MIN_VEHICLE_YEAR && year <= MAX_VEHICLE_YEAR
+      ? makeToken(match, year, null)
+      : match
+  })
 
   // Reset regex lastIndex (global regexes are stateful)
   LONG_YEAR_RANGE_RE.lastIndex  = 0

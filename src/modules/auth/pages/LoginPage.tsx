@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/auth-context'
 import { ROUTES } from '@/shared/constants'
+import { Button } from '@/shared/components/ui'
 import logo from '@/assets/logo-centriparts.png'
 
 export default function LoginPage() {
@@ -105,13 +106,13 @@ export default function LoginPage() {
             )}
 
             {/* Submit */}
-            <button
+            <Button
               type="submit"
               disabled={submitting || !email || !password}
-              className="mt-1 rounded-lg bg-yellow-400 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-1 w-full"
             >
               {submitting ? 'Ingresando…' : 'Ingresar'}
-            </button>
+            </Button>
 
           </form>
         </div>

@@ -150,7 +150,7 @@ export default function CompatibilityFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-lg leading-none text-zinc-400 transition-colors hover:text-zinc-600"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
             aria-label="Cerrar"
           >
             ×

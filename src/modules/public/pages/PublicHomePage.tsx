@@ -1,30 +1,32 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@/shared/constants'
-import heroBg from '@/assets/hero-centriparts.jpeg'
+import heroImage from '@/assets/hero-centriparts.png'
+import { getButtonClassName } from '@/shared/components/ui'
+import LocationSection from '@/modules/public/components/LocationSection'
 
 const VALUE_PROPS = [
   {
-    title: 'Amplio catálogo',
-    description:
-      'Miles de referencias disponibles para las principales marcas del mercado automotriz colombiano.',
-  },
-  {
     title: 'Compatibilidad verificada',
     description:
-      'Cada repuesto incluye información de compatibilidad por marca, modelo y año de fabricación.',
+      'Le ayudamos a identificar el componente adecuado según la marca, línea, modelo y referencia de su vehículo.',
   },
   {
-    title: 'Atención especializada',
+    title: 'Asesoría especializada',
     description:
-      'Asesoría técnica directa para encontrar el repuesto exacto que su vehículo necesita.',
+      'Reciba orientación para encontrar componentes eléctricos y electrónicos de forma más segura.',
+  },
+  {
+    title: 'Atención personalizada',
+    description:
+      'Consulte sus dudas y reciba acompañamiento durante la búsqueda de la referencia que necesita.',
   },
 ]
 
 const STATS = [
-  { label: 'Referencias disponibles', value: '+5.000' },
-  { label: 'Marcas cubiertas',        value: '+50'    },
-  { label: 'Años de experiencia',     value: '+10'    },
-  { label: 'Clientes activos',        value: '+200'   },
+  { label: 'Sistemas eléctricos',   value: 'Energía'      },
+  { label: 'Componentes electrónicos', value: 'Control'   },
+  { label: 'Aplicaciones',            value: 'Multimarca'   },
+  { label: 'Atención personalizada',  value: 'Asesoría'     },
 ]
 
 export default function PublicHomePage() {
@@ -33,34 +35,44 @@ export default function PublicHomePage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section
-        className="relative bg-cover bg-center py-24 sm:py-36"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        className="relative overflow-hidden py-24 sm:py-36"
       >
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/55" />
 
         {/* Content sits above the overlay */}
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">
-            Distribuidores de repuestos automotrices
+            Especialistas en electricidad y electrónica automotriz
           </p>
           <h1 className="mb-6 text-3xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-            El repuesto correcto,<br />en el momento justo
+            Soluciones eléctricas y electrónicas<br />para su vehículo
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
-            En Centriparts encontrará repuestos de alta calidad para su vehículo, con
-            información de compatibilidad verificada y atención personalizada.
+            Encuentre componentes eléctricos y electrónicos para el mantenimiento y la
+            reparación de su vehículo, con asesoría personalizada e información de compatibilidad.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
             <Link
               to={ROUTES.PUBLIC_CATALOG}
-              className="w-full rounded-lg bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-colors hover:bg-yellow-500 sm:w-auto"
+              className={getButtonClassName({ size: 'lg', className: 'w-full sm:w-auto' })}
             >
               Explorar catálogo
             </Link>
             <Link
               to={ROUTES.PUBLIC_CONTACT}
-              className="w-full rounded-lg border border-white/40 px-7 py-3 text-sm font-semibold text-white transition-colors hover:border-white/70 hover:bg-white/10 sm:w-auto"
+              className={getButtonClassName({
+                variant: 'secondary',
+                size: 'lg',
+                className: 'w-full border-white bg-white text-zinc-950 shadow-lg shadow-black/20 hover:border-zinc-100 hover:bg-zinc-100 sm:w-auto',
+              })}
             >
               Contáctenos
             </Link>
@@ -75,16 +87,15 @@ export default function PublicHomePage() {
 
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-yellow-500">
-                Quiénes somos
+                Nuestra especialidad
               </p>
               <h2 className="mb-5 text-3xl font-bold leading-snug text-zinc-900">
-                Experiencia y confianza al servicio del sector automotriz
+                Especialistas en componentes eléctricos y electrónicos
               </h2>
               <p className="text-sm leading-relaxed text-zinc-500">
-                Centriparts es una empresa distribuidora de repuestos automotrices con
-                trayectoria en el mercado colombiano. Ofrecemos un catálogo actualizado de
-                referencias para las principales marcas, con enfoque en calidad,
-                disponibilidad y asesoría técnica especializada.
+                En Centriparts ofrecemos soluciones para el mantenimiento y la reparación de
+                los sistemas eléctricos y electrónicos de diferentes vehículos. Le ayudamos a
+                identificar la referencia adecuada según sus necesidades y la compatibilidad requerida.
               </p>
             </div>
 
@@ -113,7 +124,7 @@ export default function PublicHomePage() {
               Por qué elegirnos
             </p>
             <h2 className="text-2xl font-bold text-zinc-900">
-              Todo lo que necesita en un solo lugar
+              Orientación para encontrar el componente adecuado
             </h2>
           </div>
 
@@ -132,21 +143,23 @@ export default function PublicHomePage() {
         </div>
       </section>
 
+      <LocationSection />
+
       {/* ── CTA banner ───────────────────────────────────────────────── */}
       <section className="bg-yellow-400 px-6 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-4 text-2xl font-bold text-black">
-            ¿Necesita un repuesto?
+            Encuentre la solución eléctrica para su vehículo
           </h2>
           <p className="mb-8 text-sm leading-relaxed text-zinc-700">
-            Explore nuestro catálogo completo con filtros por marca, categoría y
-            compatibilidad de vehículo.
+            Explore nuestro catálogo o comuníquese con nosotros para recibir orientación
+            sobre el componente que necesita.
           </p>
           <Link
             to={ROUTES.PUBLIC_CATALOG}
-            className="inline-block rounded-lg bg-black px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+            className={getButtonClassName({ variant: 'dark', size: 'lg' })}
           >
-            Ver todos los productos
+            Ver catálogo
           </Link>
         </div>
       </section>

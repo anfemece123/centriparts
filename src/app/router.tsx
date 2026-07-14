@@ -25,6 +25,7 @@ import ProductsPage      from '@/modules/catalog/pages/ProductsPage'
 import ProductDetailPage from '@/modules/catalog/pages/ProductDetailPage'
 import CategoriesPage    from '@/modules/catalog/pages/CategoriesPage'
 import NameAnalysisPage  from '@/modules/catalog/pages/NameAnalysisPage'
+import VisualSearchAdminPage from '@/modules/catalog/pages/VisualSearchAdminPage'
 import OrdersPage        from '@/modules/orders/pages/OrdersPage'
 import OrderDetailPage   from '@/modules/orders/pages/OrderDetailPage'
 
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
           { path: ROUTES.ADMIN_PRODUCT_DETAIL, element: <ProductDetailPage /> },
           { path: ROUTES.ADMIN_CATEGORIES,     element: <CategoriesPage />    },
           { path: ROUTES.ADMIN_NAME_ANALYSIS,  element: <NameAnalysisPage />  },
+          { path: ROUTES.ADMIN_VISUAL_SEARCH,  element: <VisualSearchAdminPage /> },
           { path: ROUTES.ADMIN_ORDERS,         element: <OrdersPage />        },
           { path: ROUTES.ADMIN_ORDER_DETAIL,   element: <OrderDetailPage />   },
         ],

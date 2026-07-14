@@ -1,4 +1,6 @@
 export { default as Button } from './Button'
+export { getButtonClassName } from './button-styles'
+export type { ButtonSize, ButtonVariant } from './button-styles'
 export { default as Input } from './Input'
 export { default as Card } from './Card'
 export { default as PageHeader } from './PageHeader'
